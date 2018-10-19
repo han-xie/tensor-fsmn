@@ -26,9 +26,9 @@ class FSMN(object):
             mem = self._memory_weights[tf.minimum(step, self._memory_size)::-1]
             d_batch = tf.pad(mem, [[left_num, right_num]])
             memory_matrix.append([d_batch])
-        memory_matrix = tf.concat(0, memory_matrix)
+        memory_matrix = tf.concat(memory_matrix,0)
 
-        h_hatt = tf.batch_matmul([memory_matrix] * batch_size, input_data)
-        h = tf.batch_matmul(input_data, [self._W1] * batch_size)
-        h += tf.batch_matmul(h_hatt, [self._W2] * batch_size) + self._bias
+        h_hatt = tf.matmul([memory_matrix] * batch_size, input_data)
+        h = tf.matmul(input_data, [self._W1] * batch_size)
+        h += tf.matmul(h_hatt, [self._W2] * batch_size) + self._bias
         return h
